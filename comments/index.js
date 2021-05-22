@@ -18,7 +18,6 @@ app.get('/posts/:id/comments', (req, res) => {
 // CREATE COMMENTS
 app.post('/posts/:id/comments', async (req, res) => {
     const commentId = randomBytes(4).toString('hex');
-
     const { content } = req.body;
 
     // check if there is a comment associated to a post if that results as undefinied then give an empty array
@@ -37,9 +36,7 @@ app.post('/posts/:id/comments', async (req, res) => {
             content,
             postId: req.params.id,
             status: 'pending'
-        }
-    }).catch((err) => {
-        console.log(err.message);
+        },
       });
 
     // send the response to the user
@@ -53,12 +50,11 @@ app.post('/events', async (req, res) => {
 
     const { type, data } = req.body;
 
-    if (type === 'CommentCreated') {
+    if (type === 'CommentModerated') {
         const { postId, id, status, content } = data;
-
         const comments = commentsByPostId[postId];
 
-        const comment = comments.find(comment => {
+        const comment = comments.find((comment) => {
             return comment.id === id;
         });
 
@@ -71,11 +67,10 @@ app.post('/events', async (req, res) => {
                 id,
                 status,
                 postId,
-                content
-            }
+                content,
+            },
         });
-    };
-
+    }
 
     res.send({});
 });
